@@ -288,10 +288,11 @@ public class ClientToProxyConnection extends ProxyConnection<HttpRequest> {
 				String diffSummary = String.format("current:%s request:%s", this.currentProxyToServerRouteId,
 						requestRouteId);
 				LOG.debug("ProxyToServerConnection updated: {}", diffSummary);
-				ProxyToServerConnection toClose = true ? null
-						: this.serverConnectionsByRouteId.remove(this.currentProxyToServerRouteId);
+				ProxyToServerConnection toClose = this.serverConnectionsByRouteId
+						.remove(this.currentProxyToServerRouteId);
 				if (toClose != null) {
 					toClose.become(ConnectionState.DISCONNECTED);
+					toClose.disconnect();
 				}
 				this.currentProxyToServerRouteId = null;
 			}
